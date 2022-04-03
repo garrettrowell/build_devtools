@@ -3,7 +3,7 @@ Vagrant.configure('2') do |config|
   config.vm.box = 'bento/centos-7'
 
   # Networking
-  config.vm.network "private_network", type: "dhcp"
+  #config.vm.network "private_network", type: "dhcp"
 
   # Install puppet-agent
   config.vm.provision "shell", path: "scripts/install_puppet_agent.sh"
