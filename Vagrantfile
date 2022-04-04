@@ -11,15 +11,15 @@ Vagrant.configure('2') do |config|
     cent7.vm.provision 'shell', preserve_order: true, path: 'scripts/common/puppet_bootstrap.sh'
 
     # Build and install vim from source
-    cent7.vm.provision 'shell', preserve_order: true, inline: 'puppet apply /vagrant/puppet/vim.pp'
+    cent7.vm.provision 'shell', preserve_order: true, inline: 'puppet apply /vagrant/puppet/vim/install.pp'
 
     # Build and install git from source
     cent7.vm.provision 'shell', preserve_order: true, inline: 'puppet apply /vagrant/puppet/git.pp'
 
     # Powerline goodness
-    cent7.vm.provision 'shell', preserve_order: true, inline: 'puppet apply /vagrant/puppet/powerline.pp'
+    cent7.vm.provision 'shell', preserve_order: true, inline: 'puppet apply /vagrant/puppet/powerline/install.pp'
+    cent7.vm.provision 'shell', preserve_order: true, inline: 'puppet apply /vagrant/puppet/powerline/fonts.pp'
 
-    cent7.vm.provision "shell", preserve_order: true,  path: "scripts/install_powerline_fonts.sh"
     cent7.vm.provision "shell", preserve_order: true,  path: "scripts/setup_vim.sh"
     cent7.vm.provision "shell", preserve_order: true,  path: "scripts/setup_powerline_bash.sh"
     cent7.vm.provision "shell", preserve_order: true,  path: "scripts/config_powerline.sh"
@@ -34,15 +34,15 @@ Vagrant.configure('2') do |config|
     ubu2004.vm.provision 'shell', preserve_order: true, path: 'scripts/common/puppet_bootstrap.sh'
 
     # Build and install vim from source
-    ubu2004.vm.provision 'shell', preserve_order: true, inline: 'puppet apply /vagrant/puppet/vim.pp'
+    ubu2004.vm.provision 'shell', preserve_order: true, inline: 'puppet apply /vagrant/puppet/vim/install.pp'
 
     # Build and install git from source
     ubu2004.vm.provision 'shell', preserve_order: true, inline: 'puppet apply /vagrant/puppet/git.pp'
 
     # Powerline goodness
-    ubu2004.vm.provision 'shell', preserve_order: true, inline: 'puppet apply /vagrant/puppet/powerline.pp'
+    ubu2004.vm.provision 'shell', preserve_order: true, inline: 'puppet apply /vagrant/puppet/powerline/install.pp'
+    ubu2004.vm.provision 'shell', preserve_order: true, inline: 'puppet apply /vagrant/puppet/powerline/fonts.pp'
 
-    ubu2004.vm.provision "shell", preserve_order: true, path: "scripts/install_powerline_fonts.sh"
     ubu2004.vm.provision "shell", preserve_order: true, path: "scripts/setup_vim.sh"
     ubu2004.vm.provision "shell", preserve_order: true, path: "scripts/setup_powerline_bash.sh"
     ubu2004.vm.provision "shell", preserve_order: true, path: "scripts/config_powerline.sh"
