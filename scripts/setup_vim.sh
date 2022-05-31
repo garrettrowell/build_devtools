@@ -55,6 +55,8 @@ read -r -d '' VIM_CONFIG <<'EOF'
 " misc config
 " ###############################
 
+filetype plugin indent on
+
 " syntax highlighting
 :syntax on
 
@@ -68,15 +70,6 @@ set number
 " highlight trailing whitespace in RED
 " :highlight ExtraWhitespace ctermbg=red guibg=red
 " autocmd Syntax * syn match ExtraWhitespace /\s\+$\| \+\ze\t/
-
-" ###############################
-" ALE config
-" ###############################
-
-" disable looking in config files https://github.com/rodjek/puppet-lint#configuration-file
-"   to workaround any incorrect configs breaking puppet-lint
-" This was added in due to a bad .puppet-lint.rc in a module
-let g:ale_puppet_puppetlint_options = '--no-config'
 
 " ###############################
 " Tagbar config
