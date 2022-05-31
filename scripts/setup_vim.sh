@@ -3,8 +3,11 @@
 VIMRC='/root/.vimrc'
 
 # install vundle plugin manager
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+git clone https://github.com/VundleVim/Vundle.vim.git /root/.vim/bundle/Vundle.vim
+git clone https://github.com/VundleVim/Vundle.vim.git /home/vagrant/.vim/bundle/Vundle.vim
+chown -R vagrant: /home/vagrant/.vim
 
+# Grip is cool
 pip3 install grip
 
 REPO_ROOT=$(pip3 show powerline-status 2>/dev/null | grep Location | cut -d ' ' -f 2)
@@ -217,3 +220,37 @@ EOT
 #/usr/local/bin/vim +PluginInstall +qall
 OUR_VIM=/usr/local/bin/vim
 echo | $OUR_VIM +PluginInstall +qall &>/dev/null
+
+# Quick hack for vagrant user
+cat <<EOT >> /home/vagrant/.vimrc
+" ###############################
+" vundle config
+" ###############################
+
+set nocompatible
+filetype off
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" Add plugins here
+$VIM_PLUGINS
+
+" All of your Plugins must be added before the following line
+call vundle#end()
+" Rest of vim config
+
+" ###############################
+" powerline config
+" ###############################
+$VIM_POWERLINE
+
+$VIM_CONFIG
+EOT
+
+# give correct ownership
+chown vagrant: /home/vagrant/.vimrc
