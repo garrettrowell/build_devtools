@@ -29,3 +29,5 @@ cp /vagrant/files/powerline/colorschemes/shell/devtools.json $CONF_DIR/colorsche
 cp /vagrant/files/powerline/themes/vim/devtools.json $CONF_DIR/themes/vim/devtools.json
 cp /vagrant/files/powerline/themes/shell/devtools.json $CONF_DIR/themes/shell/devtools.json
 cp /vagrant/files/powerline/config.json $CONF_DIR/config.json
+
+chown -R vagrant: /home/vagrant/.config

@@ -25,6 +25,10 @@ Vagrant.configure('2') do |config|
     cent7.vm.provision 'shell', preserve_order: true,  path: 'scripts/vim_plugins_nonprivileged.sh', privileged: false
     cent7.vm.provision 'shell', preserve_order: true,  path: 'scripts/setup_powerline_bash.sh'
     cent7.vm.provision 'shell', preserve_order: true,  path: 'scripts/config_powerline.sh'
+
+    # Rbenv for vagrant user
+    cent7.vm.provision 'shell', preserve_order: true,  path: 'scripts/install_rbenv.sh', privileged: false
+    cent7.vm.provision 'shell', preserve_order: true,  path: 'scripts/gems_for_vim.sh', privileged: false
   end
 
   config.vm.define 'ubu2004' do |ubu2004|
