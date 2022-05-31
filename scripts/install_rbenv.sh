@@ -4,7 +4,7 @@
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 cd ~/.rbenv && src/configure && make -C src
 
-cat <<EOT >> /home/vagrant/.bashrc
+cat <<EOT >> /home/vagrant/.bash_profile
 # rbenv
 export RBENV_ROOT="\$HOME/.rbenv"
 export PATH="\$RBENV_ROOT/bin:\$PATH"
