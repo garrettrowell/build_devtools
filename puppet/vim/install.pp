@@ -14,11 +14,11 @@ $build_deps = "${facts['os']['name']}${facts['os']['release']['major']}" ? {
   default       => undef,
 }
 
-package { $build_deps:
-  ensure => present,
-  tag    => ['vim_build_dep'],
-  before => Vcsrepo['vim src'],
-}
+#package { $build_deps:
+#  ensure => present,
+#  tag    => ['vim_build_dep'],
+#  before => Vcsrepo['vim src'],
+#}
 
 # Ensure additional packages for functionality present
 
@@ -49,22 +49,22 @@ $add_deps = "${facts['os']['name']}${facts['os']['release']['major']}" ? {
     'libxpm-dev',
     'libxt-dev',
     'python3-dev',
-    'ruby-dev',
+    #    'ruby-dev',
     'libperl-dev',
     'lua5.2',
     'liblua5.2-0',
     'liblua5.2-dev',
     'ctags',
-    'git',
+    #    'git',
   ],
   default       => undef,
 }
 
-package { $add_deps:
-  ensure => present,
-  tag    => ['vim_add_dep'],
-  before => Vcsrepo['vim src'],
-}
+#package { $add_deps:
+#  ensure => present,
+#  tag    => ['vim_add_dep'],
+#  before => Vcsrepo['vim src'],
+#}
 
 # Package names to remove
 
@@ -86,11 +86,11 @@ $pkg_remove = "${facts['os']['name']}${facts['os']['release']['major']}" ? {
   default       => undef,
 }
 
-package { $pkg_remove:
-  ensure => absent,
-  tag    => ['vim_pkg_remove'],
-  before => Vcsrepo['vim src'],
-}
+#package { $pkg_remove:
+#  ensure => absent,
+#  tag    => ['vim_pkg_remove'],
+#  before => Vcsrepo['vim src'],
+#}
 
 # location of src files
 $src_path = '/tmp/vim'
@@ -100,6 +100,7 @@ vcsrepo { 'vim src':
   provider => git,
   path     => $src_path,
   source   => 'https://github.com/vim/vim.git',
+  user     => 'vagrant',
 }
 
 # Only build + install if src_path updates
@@ -108,17 +109,19 @@ exec {
     cwd         => $src_path,
     refreshonly => true,
     subscribe   => Vcsrepo['vim src'],
-    path        => ['/usr/bin', '/usr/sbin', '/bin'],
+    path        => ['/home/vagrant/.rbenv/bin', '/usr/bin', '/usr/sbin', '/bin', '/usr/local/bin'],
+    user        => 'vagrant',
+    provider    => 'shell',
   ;
   'vim configure':
-    command => "${src_path}/configure --with-features=huge --enable-multibyte --enable-rubyinterp --enable-perlinterp --enable-luainterp --enable-python3interp --with-python3-command=python3",
+    command => "eval \"$(rbenv init - bash)\" && ${src_path}/configure --with-features=huge --enable-multibyte --enable-rubyinterp --enable-perlinterp --enable-luainterp --enable-python3interp --with-python3-command=python3",
   ;
   'vim make':
     command => 'make',
     require => Exec['vim configure'],
   ;
   'vim make install':
-    command => 'make install',
+    command => 'sudo make install',
     require => Exec['vim make'],
   ;
 }

@@ -12,6 +12,7 @@ $build_deps = "${facts['os']['name']}${facts['os']['release']['major']}" ? {
     'autoconf',
   ],
   'Ubuntu20.04' => [
+    'autoconf',
     'libz-dev',
     'libssl-dev',
     'libcurl4-gnutls-dev',

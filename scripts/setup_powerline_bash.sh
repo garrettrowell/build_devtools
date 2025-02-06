@@ -34,3 +34,4 @@ if command -v powerline-daemon 1>/dev/null 2>&1; then
 fi
 EOT
 
+chown vagrant: $USER_PROFILE
