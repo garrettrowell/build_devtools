@@ -36,6 +36,4 @@ $build_deps = "${facts['os']['name']}${facts['os']['release']['major']}" ? {
 
 package { $build_deps:
   ensure => present,
-  #  tag    => ['git_build_dep'],
-  #  before => Vcsrepo['git src'],
 }

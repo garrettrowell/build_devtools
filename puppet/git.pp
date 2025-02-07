@@ -40,6 +40,12 @@ vcsrepo { 'git src':
   source   => 'https://github.com/git/git.git',
 }
 
+# Make sure git is uninstalled after cloning down the repo
+package { 'git':
+  ensure  => absent,
+  require => Vcsrepo['git src'],
+}
+
 # Only build + install if src_path updates
 exec {
   default:
