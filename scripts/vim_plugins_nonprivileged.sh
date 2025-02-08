@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OUR_VIM=/usr/local/bin/vim
+OUR_VIM=/home/vagrant/.local/bin/vim
 echo | $OUR_VIM +PluginInstall +qall &>/dev/null
 
 # CommandT setup

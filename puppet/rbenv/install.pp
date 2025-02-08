@@ -10,7 +10,7 @@ vcsrepo { 'rbenv src':
   user     => $install_for,
 }
 
-$bash_file_name = '.bash_profile'
+$bash_file_name = '.profile'
 $bash_file_path = "/home/${install_for}/${bash_file_name}"
 file { $bash_file_path:
   ensure => file,

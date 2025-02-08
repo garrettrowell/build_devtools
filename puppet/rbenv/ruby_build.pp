@@ -65,6 +65,7 @@ exec {
     require => Vcsrepo['ruby-build src'],
   ;
   "rbenv global ${puppet_ruby}":
-    subscribe => Exec["rbenv install ${puppet_ruby}"],
+    refreshonly => true,
+    subscribe   => Exec["rbenv install ${puppet_ruby}"],
   ;
 }
