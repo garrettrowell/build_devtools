@@ -39,7 +39,7 @@ Vagrant.configure('2') do |config|
 
   config.vm.define 'ubu2004' do |ubu2004|
     # Box config
-    ubu2004.vm.box = 'bento/ubuntu-20.04'
+    ubu2004.vm.box = 'ubuntu/focal64'
     ubu2004.vm.hostname = 'ubu2004-devtools'
 
     ######################
@@ -62,16 +62,20 @@ Vagrant.configure('2') do |config|
     # Bootstrap Puppet Modules
     #
     ##########################
-    ubu2004.vm.provision 'Puppet Module install - unprivileged',
+    ubu2004.vm.provision 'Puppet Module install',
                          preserve_order: true,
-                         privileged: false,
                          type: 'shell',
                          inline: 'puppet apply /vagrant/puppet/module_install.pp'
-    ubu2004.vm.provision 'Puppet Module install - privileged',
+
+    ########################
+    #
+    # Vagrant User Bootstrap
+    #
+    ########################
+    ubu2004.vm.provision 'Vagrant user bootstrap',
                          preserve_order: true,
-                         privileged: true,
                          type: 'shell',
-                         inline: 'puppet apply /vagrant/puppet/module_install.pp'
+                         inline: 'puppet apply /vagrant/puppet/user_bootstrap.pp'
 
     #####################################
     #
@@ -81,7 +85,7 @@ Vagrant.configure('2') do |config|
     ubu2004.vm.provision 'Compile + Install Git',
                          preserve_order: true,
                          type: 'shell',
-                         inline: 'puppet apply /vagrant/puppet/git.pp'
+                         inline: 'puppet apply /vagrant/puppet/git/install.pp'
 
     ################################
     #
@@ -91,37 +95,17 @@ Vagrant.configure('2') do |config|
     ubu2004.vm.provision 'Install rbenv',
                          preserve_order: true,
                          type: 'shell',
-                         privileged: false,
-                         inline: <<-SHELL
-                           git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-                           ~/.rbenv/bin/rbenv init
-                           echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bash_profile
-                           chown vagrant: ~/.bash_profile
-                         SHELL
+                         inline: 'puppet apply /vagrant/puppet/rbenv/install.pp'
 
     #####################################################################
     #
     # Vagrant user builds the version of ruby shipped by the puppet agent
     #
     #####################################################################
-    ubu2004.vm.provision 'Install rbenv/ruby-build deps',
+    ubu2004.vm.provision 'rbenv/ruby-build',
                          type: 'shell',
                          preserve_order: true,
                          inline: 'puppet apply /vagrant/puppet/rbenv/ruby_build.pp'
-
-    ubu2004.vm.provision 'Build ruby',
-                         preserve_order: true,
-                         type: 'shell',
-                         privileged: false,
-                         reset: true,
-                         inline: <<-SHELL
-                           eval "$(~/.rbenv/bin/rbenv init - bash)"
-                           git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
-                           puppet_ruby=$(/opt/puppetlabs/puppet/bin/ruby --version | cut -d ' ' -f 2 | sed 's/p.*$//')
-                           rbenv install $puppet_ruby
-                           rbenv global $puppet_ruby
-                           gem install bundler
-                         SHELL
 
     ############################################
     #
@@ -138,6 +122,7 @@ Vagrant.configure('2') do |config|
                            puppet_version=$(puppet --version)
                            gem install puppet -v $puppet_version
                            gem install voxpupuli-puppet-lint-plugins
+                           gem install bundler
                          SHELL
 
     #####################################
@@ -145,16 +130,9 @@ Vagrant.configure('2') do |config|
     # Compile and install Vim from source
     #
     #####################################
-    ubu2004.vm.provision 'Install Vim Dependencies',
-                         preserve_order: true,
-                         type: 'shell',
-                         privileged: true,
-                         inline: 'puppet apply /vagrant/puppet/vim/deps.pp'
-
     ubu2004.vm.provision 'Compile + Install Vim',
                          preserve_order: true,
                          type: 'shell',
-                         privileged: false,
                          inline: 'puppet apply /vagrant/puppet/vim/install.pp'
 
     ###############################
@@ -199,14 +177,8 @@ Vagrant.configure('2') do |config|
     # Cleanup Bootstrap Puppet Modules
     #
     ##################################
-    ubu2004.vm.provision 'Puppet Module uninstall - unprivileged',
+    ubu2004.vm.provision 'Puppet Module uninstall',
                          preserve_order: true,
-                         privileged: false,
-                         type: 'shell',
-                         inline: 'puppet apply /vagrant/puppet/module_uninstall.pp'
-    ubu2004.vm.provision 'Puppet Module uninstall - privileged',
-                         preserve_order: true,
-                         privileged: true,
                          type: 'shell',
                          inline: 'puppet apply /vagrant/puppet/module_uninstall.pp'
   end

@@ -23,7 +23,7 @@ fi
 EOT
 
 # Vagrant User
-USER_PROFILE='/home/vagrant/.bash_profile'
+USER_PROFILE='/home/vagrant/.profile'
 
 cat <<EOT >> $USER_PROFILE
 if command -v powerline-daemon 1>/dev/null 2>&1; then

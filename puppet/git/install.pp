@@ -1,5 +1,7 @@
-# Ensure Build Dependencies are met
+$compile_for = 'vagrant'
+$src_path = "/tmp/${compile_for}_git"
 
+# Ensure Build Dependencies are met
 $build_deps = "${facts['os']['name']}${facts['os']['release']['major']}" ? {
   'CentOS7'     => [
     'curl-devel',
@@ -30,35 +32,30 @@ package { $build_deps:
   before => Vcsrepo['git src'],
 }
 
-# location of src files
-$src_path = '/tmp/git'
-
+# Clone source
 vcsrepo { 'git src':
   ensure   => present,
   provider => git,
   path     => $src_path,
   source   => 'https://github.com/git/git.git',
+  user     => $compile_for,
 }
 
-# Make sure git is uninstalled after cloning down the repo
-package { 'git':
-  ensure  => absent,
-  require => Vcsrepo['git src'],
-}
-
-# Only build + install if src_path updates
+# Only compile + install if src_path updates
 exec {
   default:
     cwd         => $src_path,
     refreshonly => true,
     subscribe   => Vcsrepo['git src'],
-    path        => ['/usr/bin', '/usr/sbin', '/bin'],
+    path        => ['/usr/bin', '/usr/sbin', '/bin', '/usr/local/bin'],
+    user        => $compile_for,
+    logoutput   => true,
   ;
   'git make configure':
     command => 'make configure',
   ;
   'git configure':
-    command => "${src_path}/configure",
+    command => "${src_path}/configure --prefix=/home/${compile_for}/.local",
     require => Exec['git make configure'],
   ;
   'git make all':
